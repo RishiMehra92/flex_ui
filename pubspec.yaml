@@ -1,6 +1,6 @@
 name: flex_ui
 description: A production-ready, highly customizable Flutter UI component library with accessible components, responsive layouts, and unified theming.
-version: 0.2.0
+version: 0.3.0
 homepage: https://github.com/flex-ui/flex_ui
 repository: https://github.com/flex-ui/flex_ui
 issue_tracker: https://github.com/flex-ui/flex_ui/issues
