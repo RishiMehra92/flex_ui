@@ -26,6 +26,11 @@ class FlexEmailField extends StatelessWidget {
     this.fillColor,
     this.borderColor,
     this.borderRadius,
+    this.borderWidth,
+    this.gradient,
+    this.gradientBorder,
+    this.focusedGradientBorder,
+    this.errorGradientBorder,
     this.width,
     this.semanticLabel,
     this.autovalidateMode,
@@ -51,6 +56,11 @@ class FlexEmailField extends StatelessWidget {
   final Color? fillColor;
   final Color? borderColor;
   final double? borderRadius;
+  final double? borderWidth;
+  final Gradient? gradient;
+  final Gradient? gradientBorder;
+  final Gradient? focusedGradientBorder;
+  final Gradient? errorGradientBorder;
   final double? width;
   final String? semanticLabel;
   final AutovalidateMode? autovalidateMode;
@@ -78,6 +88,11 @@ class FlexEmailField extends StatelessWidget {
       fillColor: fillColor,
       borderColor: borderColor,
       borderRadius: borderRadius,
+      borderWidth: borderWidth,
+      gradient: gradient,
+      gradientBorder: gradientBorder,
+      focusedGradientBorder: focusedGradientBorder,
+      errorGradientBorder: errorGradientBorder,
       width: width,
       semanticLabel: semanticLabel,
       autovalidateMode: autovalidateMode,

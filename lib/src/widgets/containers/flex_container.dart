@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../config/flex_ui_theme.dart';
+import '../../theme/flex_gradient_border.dart';
 
 /// A theme-aware container widget with pre-configured borders, radii,
 /// and padding presets.
@@ -13,6 +14,9 @@ class FlexContainer extends StatelessWidget {
     this.margin,
     this.backgroundColor,
     this.gradient,
+    this.borderGradient,
+    this.gradientOverlay,
+    this.gradientOverlayBlendMode = BlendMode.srcOver,
     this.borderRadius,
     this.borderColor,
     this.borderWidth = 1.0,
@@ -29,6 +33,9 @@ class FlexContainer extends StatelessWidget {
   final EdgeInsetsGeometry? margin;
   final Color? backgroundColor;
   final Gradient? gradient;
+  final Gradient? borderGradient;
+  final Gradient? gradientOverlay;
+  final BlendMode gradientOverlayBlendMode;
   final double? borderRadius;
   final Color? borderColor;
   final double borderWidth;
@@ -45,7 +52,29 @@ class FlexContainer extends StatelessWidget {
     final effectiveRadius = borderRadius ?? theme.radius.md;
     final effectiveBackground = backgroundColor ?? colors.surface;
 
-    return Container(
+    Widget content = child;
+
+    if (gradientOverlay != null) {
+      content = Stack(
+        fit: StackFit.passthrough,
+        children: [
+          content,
+          Positioned.fill(
+            child: IgnorePointer(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: gradientOverlay,
+                  backgroundBlendMode: gradientOverlayBlendMode,
+                  borderRadius: BorderRadius.circular(effectiveRadius),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    Widget container = Container(
       width: width,
       height: height,
       padding: padding,
@@ -56,7 +85,7 @@ class FlexContainer extends StatelessWidget {
         color: gradient == null ? effectiveBackground : null,
         gradient: gradient,
         borderRadius: BorderRadius.circular(effectiveRadius),
-        border: borderColor != null
+        border: (borderGradient == null && borderColor != null)
             ? Border.all(color: borderColor!, width: borderWidth)
             : null,
         boxShadow: elevation > 0
@@ -69,7 +98,20 @@ class FlexContainer extends StatelessWidget {
               ]
             : null,
       ),
-      child: child,
+      child: content,
     );
+
+    if (borderGradient != null && borderWidth > 0) {
+      container = CustomPaint(
+        foregroundPainter: FlexGradientBorderPainter(
+          gradient: borderGradient!,
+          borderWidth: borderWidth,
+          borderRadius: BorderRadius.circular(effectiveRadius),
+        ),
+        child: container,
+      );
+    }
+
+    return container;
   }
 }

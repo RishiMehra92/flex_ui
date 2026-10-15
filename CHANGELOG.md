@@ -2,6 +2,29 @@
 
 All notable changes to `flex_ui` will be documented in this file.
 
+## 0.2.0
+
+### Universal Gradient & Styling System
+- **Centralized Gradient Engine (`FlexGradient`)**:
+  - Direct extension of Flutter's native `Gradient` class, making it drop-in compatible with any Flutter widget or `BoxDecoration`.
+  - Supports linear (`FlexGradient.linear`), radial (`FlexGradient.radial`), sweep (`FlexGradient.sweep`), and solid color fallback (`FlexGradient.solid`).
+  - 10 pre-configured designer palettes: `primary`, `secondary`, `accent`, `sunset`, `ocean`, `purplePink`, `emerald`, `fire`, `dark`, and `glass`.
+  - Gradient transformations: `.withOpacity()`, `.withRotation()`, `.scale()`, `.copyWith()`, and smooth interpolation via `FlexGradient.lerp()`.
+- **Gradient Borders (`FlexGradientBorderPainter` & `FlexGradientBorderBox`)**:
+  - Accurate stroke alignment for rounded rectangles and circles using `deflate(borderWidth / 2)`.
+  - Clean container wrapper for combined background gradients, border gradients, and elevation shadows.
+- **Universal Widget Styling**:
+  - **Buttons**: `gradient`, `borderGradient`, and `labelGradient` (via `ShaderMask`) across `FlexButton`, `FlexOutlinedButton`, `FlexTextButton`, `FlexGradientButton`, `FlexIconButton`, and `FlexFloatingActionButton`.
+  - **Containers & Cards**: Independent background gradients and border gradients, gradient overlays, custom blend modes, and shadow colors across `FlexContainer`, `FlexCard`, `FlexElevatedCard`, and `FlexOutlinedCard`.
+  - **Text & Headings**: Rich gradient text rendering via `ShaderMask` with semantic accessibility preservation on `FlexText` and `FlexHeading`.
+  - **Inputs & Form Fields**: Gradient borders (with stateful overrides: focused, error, disabled, success), gradient-filled backgrounds, and icon tinting on `FlexInputField`, `FlexEmailField`, `FlexPasswordField`, `FlexPhoneField`, `FlexNumberField`, `FlexSearchField`, `FlexTextArea`, `FlexDropdownField`, and `FlexDateField`.
+  - **Selection Controls**: Gradients for checked/selected fills, track/thumb gradients on `FlexSwitch`, and gradient outlines on `FlexCheckbox` and `FlexRadio`.
+  - **Badges, Chips, Indicators & Dividers**: Gradient backgrounds and border gradients on `FlexChip`, `FlexActionChip`, `FlexFilterChip`, `FlexBadge`, `FlexStatusBadge`, `FlexAvatar`, `FlexLinearProgress`, `FlexDivider`, and `FlexVerticalDivider`.
+- **Theme-Level Gradient Integration**:
+  - Added `primaryGradient`, `secondaryGradient`, `accentGradient`, `backgroundGradient`, and `surfaceGradient` to `FlexColors` and `FlexUIThemeData`.
+  - Component themes (`FlexButtonThemeData`, `FlexInputThemeData`, `FlexCardThemeData`) now support global gradient configurations with per-widget overrides.
+- **100% Backward Compatible**: All existing constructors, arguments, and theme structures continue to function seamlessly.
+
 ## 0.1.0
 
 ### Initial Release

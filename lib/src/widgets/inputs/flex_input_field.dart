@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../config/flex_ui_theme.dart';
+import '../../theme/flex_gradient_border.dart';
 
 /// A versatile, highly customizable input field that integrates with Flutter's
 /// [Form] system, supporting labels, helpers, prefixes, suffixes, validation,
@@ -47,6 +48,17 @@ class FlexInputField extends StatefulWidget {
     this.borderColor,
     this.focusedBorderColor,
     this.errorBorderColor,
+    this.disabledBorderColor,
+    this.focusedBorderWidth,
+    this.gradient,
+    this.gradientBorder,
+    this.borderGradient,
+    this.focusedGradientBorder,
+    this.errorGradientBorder,
+    this.disabledGradientBorder,
+    this.successGradientBorder,
+    this.prefixIconColor,
+    this.suffixIconColor,
     this.textStyle,
     this.hintStyle,
     this.labelStyle,
@@ -179,6 +191,39 @@ class FlexInputField extends StatefulWidget {
   /// Custom border color when invalid.
   final Color? errorBorderColor;
 
+  /// Custom border color when disabled.
+  final Color? disabledBorderColor;
+
+  /// Custom focused border width.
+  final double? focusedBorderWidth;
+
+  /// Optional background gradient for the input field.
+  final Gradient? gradient;
+
+  /// Optional default gradient border for the input field.
+  final Gradient? gradientBorder;
+
+  /// Alias for [gradientBorder].
+  final Gradient? borderGradient;
+
+  /// Optional gradient border when the field is focused.
+  final Gradient? focusedGradientBorder;
+
+  /// Optional gradient border when the field has an error.
+  final Gradient? errorGradientBorder;
+
+  /// Optional gradient border when the field is disabled.
+  final Gradient? disabledGradientBorder;
+
+  /// Optional gradient border when the field is valid/success.
+  final Gradient? successGradientBorder;
+
+  /// Custom prefix icon color.
+  final Color? prefixIconColor;
+
+  /// Custom suffix icon color.
+  final Color? suffixIconColor;
+
   /// Custom style for the input text.
   final TextStyle? textStyle;
 
@@ -221,11 +266,17 @@ class FlexInputField extends StatefulWidget {
 
 class _FlexInputFieldState extends State<FlexInputField> {
   late bool _obscureText;
+  FocusNode? _internalFocusNode;
+  FocusNode get _effectiveFocusNode =>
+      widget.focusNode ?? (_internalFocusNode ??= FocusNode());
+  bool _isFocused = false;
+  String? _validatorError;
 
   @override
   void initState() {
     super.initState();
     _obscureText = widget.obscureText;
+    _effectiveFocusNode.addListener(_handleFocusChanged);
   }
 
   @override
@@ -233,6 +284,26 @@ class _FlexInputFieldState extends State<FlexInputField> {
     super.didUpdateWidget(oldWidget);
     if (widget.obscureText != oldWidget.obscureText) {
       _obscureText = widget.obscureText;
+    }
+    if (widget.focusNode != oldWidget.focusNode) {
+      (oldWidget.focusNode ?? _internalFocusNode)
+          ?.removeListener(_handleFocusChanged);
+      _effectiveFocusNode.addListener(_handleFocusChanged);
+    }
+  }
+
+  @override
+  void dispose() {
+    _effectiveFocusNode.removeListener(_handleFocusChanged);
+    _internalFocusNode?.dispose();
+    super.dispose();
+  }
+
+  void _handleFocusChanged() {
+    if (_isFocused != _effectiveFocusNode.hasFocus) {
+      setState(() {
+        _isFocused = _effectiveFocusNode.hasFocus;
+      });
     }
   }
 
@@ -258,11 +329,14 @@ class _FlexInputFieldState extends State<FlexInputField> {
         colors.borderFocused;
     final effectiveErrorBorderColor =
         widget.errorBorderColor ?? inTheme.errorBorderColor ?? colors.error;
+    final effectiveDisabledBorderColor =
+        widget.disabledBorderColor ?? colors.border.withValues(alpha: 0.5);
 
     final effectiveBorderWidth = widget.borderWidth ?? inTheme.borderWidth;
-    final effectiveFocusedBorderWidth = widget.borderWidth != null
-        ? widget.borderWidth! * 1.5
-        : inTheme.focusedBorderWidth;
+    final effectiveFocusedBorderWidth = widget.focusedBorderWidth ??
+        (widget.borderWidth != null
+            ? widget.borderWidth! * 1.5
+            : inTheme.focusedBorderWidth);
 
     // Smart capitalization fallback
     final effectiveCapitalization = widget.textCapitalization ??
@@ -273,6 +347,12 @@ class _FlexInputFieldState extends State<FlexInputField> {
             ? TextCapitalization.none
             : TextCapitalization.sentences);
 
+    // Prefix and Suffix colors
+    final effectivePrefixColor = widget.prefixIconColor ??
+        (widget.enabled ? colors.hint : colors.disabledText);
+    final effectiveSuffixColor = widget.suffixIconColor ??
+        (widget.enabled ? colors.hint : colors.disabledText);
+
     // Prefix
     Widget? prefix;
     if (widget.prefixWidget != null) {
@@ -280,7 +360,7 @@ class _FlexInputFieldState extends State<FlexInputField> {
     } else if (widget.prefixIcon != null) {
       prefix = Icon(
         widget.prefixIcon,
-        color: widget.enabled ? colors.hint : colors.disabledText,
+        color: effectivePrefixColor,
         size: 20,
       );
     }
@@ -293,7 +373,7 @@ class _FlexInputFieldState extends State<FlexInputField> {
           _obscureText
               ? Icons.visibility_outlined
               : Icons.visibility_off_outlined,
-          color: colors.hint,
+          color: widget.suffixIconColor ?? colors.hint,
           size: 20,
         ),
         onPressed: _toggleObscure,
@@ -305,42 +385,98 @@ class _FlexInputFieldState extends State<FlexInputField> {
     } else if (widget.suffixIcon != null) {
       suffix = Icon(
         widget.suffixIcon,
-        color: widget.enabled ? colors.hint : colors.disabledText,
+        color: effectiveSuffixColor,
         size: 20,
       );
     }
 
-    final outlineBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(effectiveRadius),
-      borderSide: BorderSide(
-        color: effectiveBorderColor,
-        width: effectiveBorderWidth,
-      ),
-    );
+    // Gradient styling resolution
+    final effectiveBackgroundGradient = widget.gradient ?? inTheme.gradient;
+    final effectiveGradientBorder = widget.gradientBorder ??
+        widget.borderGradient ??
+        inTheme.borderGradient;
+    final effectiveFocusedGradientBorder = widget.focusedGradientBorder ??
+        inTheme.focusedBorderGradient ??
+        effectiveGradientBorder;
+    final effectiveErrorGradientBorder = widget.errorGradientBorder ??
+        inTheme.errorBorderGradient ??
+        effectiveGradientBorder;
+    final effectiveDisabledGradientBorder =
+        widget.disabledGradientBorder ?? inTheme.disabledGradientBorder;
 
-    final focusedBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(effectiveRadius),
-      borderSide: BorderSide(
-        color: effectiveFocusedBorderColor,
-        width: effectiveFocusedBorderWidth,
-      ),
-    );
+    final hasGradientBorder = effectiveGradientBorder != null ||
+        effectiveFocusedGradientBorder != null ||
+        effectiveErrorGradientBorder != null ||
+        effectiveDisabledGradientBorder != null;
 
-    final errorBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(effectiveRadius),
-      borderSide: BorderSide(
-        color: effectiveErrorBorderColor,
-        width: effectiveBorderWidth,
-      ),
-    );
+    final bool hasError =
+        (widget.errorText != null && widget.errorText!.isNotEmpty) ||
+            (_validatorError != null && _validatorError!.isNotEmpty);
+    final String? activeErrorText = widget.errorText ?? _validatorError;
 
-    final disabledBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(effectiveRadius),
-      borderSide: BorderSide(
-        color: colors.border.withValues(alpha: 0.5),
-        width: effectiveBorderWidth,
-      ),
-    );
+    Gradient? activeGradientBorder;
+    if (hasGradientBorder) {
+      if (!widget.enabled) {
+        activeGradientBorder = effectiveDisabledGradientBorder;
+      } else if (hasError) {
+        activeGradientBorder = effectiveErrorGradientBorder;
+      } else if (_isFocused) {
+        activeGradientBorder = effectiveFocusedGradientBorder;
+      } else {
+        activeGradientBorder = effectiveGradientBorder;
+      }
+    }
+
+    final double activeBorderWidth =
+        _isFocused ? effectiveFocusedBorderWidth : effectiveBorderWidth;
+
+    InputBorder outlineBorder;
+    InputBorder focusedBorder;
+    InputBorder errorBorder;
+    InputBorder disabledBorder;
+
+    if (hasGradientBorder) {
+      final transparentBorder = OutlineInputBorder(
+        borderRadius: BorderRadius.circular(effectiveRadius),
+        borderSide: BorderSide.none,
+      );
+      outlineBorder = transparentBorder;
+      focusedBorder = transparentBorder;
+      errorBorder = transparentBorder;
+      disabledBorder = transparentBorder;
+    } else {
+      outlineBorder = OutlineInputBorder(
+        borderRadius: BorderRadius.circular(effectiveRadius),
+        borderSide: BorderSide(
+          color: effectiveBorderColor,
+          width: effectiveBorderWidth,
+        ),
+      );
+
+      focusedBorder = OutlineInputBorder(
+        borderRadius: BorderRadius.circular(effectiveRadius),
+        borderSide: BorderSide(
+          color: effectiveFocusedBorderColor,
+          width: effectiveFocusedBorderWidth,
+        ),
+      );
+
+      errorBorder = OutlineInputBorder(
+        borderRadius: BorderRadius.circular(effectiveRadius),
+        borderSide: BorderSide(
+          color: effectiveErrorBorderColor,
+          width: effectiveBorderWidth,
+        ),
+      );
+
+      disabledBorder = OutlineInputBorder(
+        borderRadius: BorderRadius.circular(effectiveRadius),
+        borderSide: BorderSide(
+          color: effectiveDisabledBorderColor,
+          width: effectiveBorderWidth,
+        ),
+      );
+    }
 
     final effectiveTextStyle = widget.textStyle ??
         theme.typography.bodyMedium.copyWith(
@@ -403,7 +539,7 @@ class _FlexInputFieldState extends State<FlexInputField> {
     Widget formField = TextFormField(
       controller: widget.controller,
       initialValue: widget.controller == null ? widget.initialValue : null,
-      focusNode: widget.focusNode,
+      focusNode: _effectiveFocusNode,
       obscureText: _obscureText,
       readOnly: widget.readOnly,
       enabled: widget.enabled,
@@ -411,7 +547,15 @@ class _FlexInputFieldState extends State<FlexInputField> {
       textCapitalization: effectiveCapitalization,
       textInputAction: widget.textInputAction,
       inputFormatters: widget.inputFormatters,
-      validator: widget.validator,
+      validator: (value) {
+        final result = widget.validator?.call(value);
+        if (_validatorError != result) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) setState(() => _validatorError = result);
+          });
+        }
+        return result;
+      },
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onSubmitted,
       onTap: widget.onTap,
@@ -429,10 +573,10 @@ class _FlexInputFieldState extends State<FlexInputField> {
       decoration: InputDecoration(
         hintText: widget.hintText,
         hintStyle: effectiveHintStyle,
-        helperText: widget.helperText,
+        helperText: hasGradientBorder ? null : widget.helperText,
         helperStyle: widget.helperStyle ??
             theme.typography.bodySmall.copyWith(color: colors.textSecondary),
-        errorText: widget.errorText,
+        errorText: hasGradientBorder ? null : widget.errorText,
         errorStyle: widget.errorStyle ??
             theme.typography.bodySmall.copyWith(color: colors.error),
         prefixIcon: prefix,
@@ -446,26 +590,58 @@ class _FlexInputFieldState extends State<FlexInputField> {
           minHeight: 44,
         ),
         filled: true,
-        fillColor: effectiveFillColor,
+        fillColor: effectiveBackgroundGradient != null
+            ? Colors.transparent
+            : effectiveFillColor,
         isDense: true,
         contentPadding: widget.padding ?? inTheme.padding,
         border: outlineBorder,
         enabledBorder: outlineBorder,
         focusedBorder: focusedBorder,
         errorBorder: errorBorder,
-        focusedErrorBorder: errorBorder.copyWith(
-          borderSide: BorderSide(
-            color: effectiveErrorBorderColor,
-            width: effectiveFocusedBorderWidth,
-          ),
-        ),
+        focusedErrorBorder: hasGradientBorder
+            ? outlineBorder
+            : errorBorder.copyWith(
+                borderSide: BorderSide(
+                  color: effectiveErrorBorderColor,
+                  width: effectiveFocusedBorderWidth,
+                ),
+              ),
         disabledBorder: disabledBorder,
       ),
     );
 
+    if (effectiveBackgroundGradient != null) {
+      formField = Container(
+        decoration: BoxDecoration(
+          gradient: effectiveBackgroundGradient,
+          borderRadius: BorderRadius.circular(effectiveRadius),
+        ),
+        child: formField,
+      );
+    }
+
+    if (hasGradientBorder &&
+        activeGradientBorder != null &&
+        activeBorderWidth > 0) {
+      formField = CustomPaint(
+        foregroundPainter: FlexGradientBorderPainter(
+          gradient: activeGradientBorder,
+          borderWidth: activeBorderWidth,
+          borderRadius: BorderRadius.circular(effectiveRadius),
+        ),
+        child: formField,
+      );
+    }
+
     if (widget.height != null) {
       formField = SizedBox(height: widget.height, child: formField);
     }
+
+    final effectiveErrorStyle = widget.errorStyle ??
+        theme.typography.bodySmall.copyWith(color: colors.error);
+    final effectiveHelperStyle = widget.helperStyle ??
+        theme.typography.bodySmall.copyWith(color: colors.textSecondary);
 
     Widget completeWidget = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -473,6 +649,22 @@ class _FlexInputFieldState extends State<FlexInputField> {
       children: [
         if (labelWidget != null) labelWidget,
         formField,
+        if (hasGradientBorder && hasError && activeErrorText != null)
+          Padding(
+            padding: EdgeInsets.only(
+              top: theme.spacing.xs,
+              left: theme.spacing.xs,
+            ),
+            child: Text(activeErrorText, style: effectiveErrorStyle),
+          )
+        else if (hasGradientBorder && widget.helperText != null)
+          Padding(
+            padding: EdgeInsets.only(
+              top: theme.spacing.xs,
+              left: theme.spacing.xs,
+            ),
+            child: Text(widget.helperText!, style: effectiveHelperStyle),
+          ),
       ],
     );
 

@@ -14,6 +14,7 @@ class FlexHeading extends StatelessWidget {
     this.level = FlexHeadingLevel.h2,
     this.titleColor,
     this.subtitleColor,
+    this.gradient,
     this.textAlign = TextAlign.start,
     this.crossAxisAlignment = CrossAxisAlignment.start,
     this.spacing = 4.0,
@@ -24,6 +25,7 @@ class FlexHeading extends StatelessWidget {
   final FlexHeadingLevel level;
   final Color? titleColor;
   final Color? subtitleColor;
+  final Gradient? gradient;
   final TextAlign textAlign;
   final CrossAxisAlignment crossAxisAlignment;
   final double spacing;
@@ -63,6 +65,7 @@ class FlexHeading extends StatelessWidget {
           title,
           variant: titleVariant,
           color: titleColor ?? colors.textPrimary,
+          gradient: gradient,
           textAlign: textAlign,
         ),
         if (subtitle != null) ...[

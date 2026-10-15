@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../config/flex_ui_theme.dart';
+import '../../theme/flex_gradient_border.dart';
 
 /// A theme-styled chip for tags, categories, or removable labels.
 class FlexChip extends StatelessWidget {
@@ -9,8 +10,11 @@ class FlexChip extends StatelessWidget {
     this.avatar,
     this.onDeleted,
     this.backgroundColor,
+    this.gradient,
+    this.borderGradient,
     this.labelColor,
     this.borderColor,
+    this.borderWidth = 1.0,
     this.deleteIconColor,
     this.borderRadius = 16.0,
     this.padding = const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -20,8 +24,11 @@ class FlexChip extends StatelessWidget {
   final Widget? avatar;
   final VoidCallback? onDeleted;
   final Color? backgroundColor;
+  final Gradient? gradient;
+  final Gradient? borderGradient;
   final Color? labelColor;
   final Color? borderColor;
+  final double borderWidth;
   final Color? deleteIconColor;
   final double borderRadius;
   final EdgeInsetsGeometry padding;
@@ -35,12 +42,16 @@ class FlexChip extends StatelessWidget {
     final effectiveLabel = labelColor ?? colors.textPrimary;
     final effectiveBorder = borderColor ?? colors.border;
 
-    return Container(
+    Widget chip = Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: effectiveBg,
+        color: gradient == null ? effectiveBg : null,
+        gradient: gradient,
         borderRadius: BorderRadius.circular(borderRadius),
-        border: Border.all(color: effectiveBorder),
+        border: (borderGradient == null &&
+                (borderColor != null || gradient == null))
+            ? Border.all(color: effectiveBorder, width: borderWidth)
+            : null,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -70,5 +81,18 @@ class FlexChip extends StatelessWidget {
         ],
       ),
     );
+
+    if (borderGradient != null && borderWidth > 0) {
+      chip = CustomPaint(
+        foregroundPainter: FlexGradientBorderPainter(
+          gradient: borderGradient!,
+          borderWidth: borderWidth,
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        child: chip,
+      );
+    }
+
+    return chip;
   }
 }

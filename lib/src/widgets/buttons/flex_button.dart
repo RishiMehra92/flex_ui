@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../config/flex_ui_theme.dart';
+import '../../theme/flex_gradient_border.dart';
 import '../../utils/string_helpers.dart';
 
 /// Button visual variant.
@@ -64,6 +65,9 @@ class FlexButton extends StatefulWidget {
     this.textStyle,
     this.fontSize,
     this.gradient,
+    this.borderGradient,
+    this.labelGradient,
+    this.shadowColor,
     this.enableAnimation = true,
     this.animationDuration,
     this.semanticLabel,
@@ -143,6 +147,15 @@ class FlexButton extends StatefulWidget {
 
   /// Gradient background (automatically used when [variant] is [FlexButtonVariant.gradient]).
   final Gradient? gradient;
+
+  /// Optional gradient applied to the button border.
+  final Gradient? borderGradient;
+
+  /// Optional gradient applied to the button text label.
+  final Gradient? labelGradient;
+
+  /// Custom shadow color for elevation.
+  final Color? shadowColor;
 
   /// Whether to enable subtle interactive press animation.
   final bool enableAnimation;
@@ -284,18 +297,31 @@ class _FlexButtonState extends State<FlexButton>
 
     // Border
     Border? border;
-    if (widget.variant == FlexButtonVariant.outlined) {
-      final borderSideColor =
-          !_isEnabled ? colors.border : (widget.borderColor ?? colors.primary);
-      border = Border.all(
-        color: borderSideColor,
-        width: widget.borderWidth ?? 1.5,
-      );
-    } else if (widget.borderColor != null) {
-      border = Border.all(
-        color: widget.borderColor!,
-        width: widget.borderWidth ?? 1.0,
-      );
+    final effectiveBorderGradient = _isEnabled
+        ? (widget.borderGradient ??
+            (widget.variant == FlexButtonVariant.outlined
+                ? btnTheme.borderGradient
+                : null))
+        : null;
+    final effectiveBorderWidth = widget.borderWidth ??
+        btnTheme.borderWidth ??
+        (widget.variant == FlexButtonVariant.outlined ? 1.5 : 1.0);
+
+    if (effectiveBorderGradient == null) {
+      if (widget.variant == FlexButtonVariant.outlined) {
+        final borderSideColor = !_isEnabled
+            ? colors.border
+            : (widget.borderColor ?? btnTheme.borderColor ?? colors.primary);
+        border = Border.all(
+          color: borderSideColor,
+          width: effectiveBorderWidth,
+        );
+      } else if (widget.borderColor != null || btnTheme.borderColor != null) {
+        border = Border.all(
+          color: widget.borderColor ?? btnTheme.borderColor!,
+          width: effectiveBorderWidth,
+        );
+      }
     }
 
     // Font and text style
@@ -307,6 +333,30 @@ class _FlexButtonState extends State<FlexButton>
         );
     final effectiveTextStyle =
         baseTextStyle.copyWith(color: effectiveForeground);
+
+    final effectiveLabelGradient =
+        _isEnabled ? (widget.labelGradient ?? btnTheme.labelGradient) : null;
+
+    Widget buildLabelText(String text) {
+      final textWidget = Text(
+        text,
+        style: effectiveLabelGradient != null
+            ? effectiveTextStyle.copyWith(color: Colors.white)
+            : effectiveTextStyle,
+        textAlign: TextAlign.center,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+      );
+      if (effectiveLabelGradient != null) {
+        return ShaderMask(
+          blendMode: BlendMode.srcIn,
+          shaderCallback: (bounds) =>
+              effectiveLabelGradient.createShader(bounds),
+          child: textWidget,
+        );
+      }
+      return textWidget;
+    }
 
     // Build children (icons + label)
     Widget content;
@@ -333,12 +383,7 @@ class _FlexButtonState extends State<FlexButton>
           if (widget.label != null || widget.loadingText != null) ...[
             SizedBox(width: theme.spacing.sm),
             Flexible(
-              child: Text(
-                loadingMessage,
-                style: effectiveTextStyle,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
+              child: buildLabelText(loadingMessage),
             ),
           ],
         ],
@@ -377,13 +422,7 @@ class _FlexButtonState extends State<FlexButton>
           ],
           if (hasLabel)
             Flexible(
-              child: Text(
-                widget.label!,
-                style: effectiveTextStyle,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
+              child: buildLabelText(widget.label!),
             ),
           if (trailing != null) ...[
             if (hasLabel) SizedBox(width: theme.spacing.xs),
@@ -395,6 +434,8 @@ class _FlexButtonState extends State<FlexButton>
 
     final double? finalWidth =
         widget.width ?? (widget.isFullWidth ? double.infinity : null);
+
+    final effectiveShadowColor = widget.shadowColor ?? Colors.black;
 
     Widget buttonWidget = AnimatedContainer(
       duration: widget.animationDuration ?? const Duration(milliseconds: 150),
@@ -412,7 +453,7 @@ class _FlexButtonState extends State<FlexButton>
         boxShadow: (effectiveElevation > 0 && _isEnabled)
             ? [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
+                  color: effectiveShadowColor.withValues(alpha: 0.08),
                   blurRadius: effectiveElevation * 2,
                   offset: Offset(0, effectiveElevation),
                 ),
@@ -440,6 +481,17 @@ class _FlexButtonState extends State<FlexButton>
         ),
       ),
     );
+
+    if (effectiveBorderGradient != null && effectiveBorderWidth > 0) {
+      buttonWidget = CustomPaint(
+        foregroundPainter: FlexGradientBorderPainter(
+          gradient: effectiveBorderGradient,
+          borderWidth: effectiveBorderWidth,
+          borderRadius: BorderRadius.circular(effectiveRadius),
+        ),
+        child: buttonWidget,
+      );
+    }
 
     if (widget.enableAnimation) {
       buttonWidget = ScaleTransition(

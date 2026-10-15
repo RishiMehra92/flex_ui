@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../config/flex_ui_theme.dart';
+import '../../theme/flex_gradient_border.dart';
 
 /// A theme-styled checkbox supporting tri-state values and animations.
 class FlexCheckbox extends StatelessWidget {
@@ -9,6 +10,11 @@ class FlexCheckbox extends StatelessWidget {
     required this.onChanged,
     this.activeColor,
     this.checkColor,
+    this.inactiveColor,
+    this.inactiveBorderColor,
+    this.gradient,
+    this.borderGradient,
+    this.borderWidth = 1.5,
     this.size = 20.0,
     this.borderRadius = 5.0,
     this.tristate = false,
@@ -19,6 +25,11 @@ class FlexCheckbox extends StatelessWidget {
   final ValueChanged<bool?>? onChanged;
   final Color? activeColor;
   final Color? checkColor;
+  final Color? inactiveColor;
+  final Color? inactiveBorderColor;
+  final Gradient? gradient;
+  final Gradient? borderGradient;
+  final double borderWidth;
   final double size;
   final double borderRadius;
   final bool tristate;
@@ -33,10 +44,63 @@ class FlexCheckbox extends StatelessWidget {
     final theme = FlexUITheme.of(context);
     final colors = theme.colors;
 
-    final effectiveActiveColor = activeColor ?? colors.primary;
-    final effectiveCheckColor = checkColor ?? Colors.white;
-
     final isSelected = _isChecked || _isIndeterminate;
+    final effectiveActiveColor = activeColor ?? colors.primary;
+    final effectiveInactiveColor = inactiveColor ?? colors.surface;
+    final effectiveCheckColor = checkColor ?? Colors.white;
+    final effectiveBorderColor = isSelected
+        ? effectiveActiveColor
+        : (inactiveBorderColor ?? colors.border);
+
+    final effectiveGradient = (_isEnabled && isSelected) ? gradient : null;
+    final effectiveBorderGradient = _isEnabled ? borderGradient : null;
+
+    Widget box = AnimatedContainer(
+      duration: const Duration(milliseconds: 150),
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: !_isEnabled
+            ? colors.disabled
+            : (effectiveGradient == null
+                ? (isSelected ? effectiveActiveColor : effectiveInactiveColor)
+                : null),
+        gradient: effectiveGradient,
+        borderRadius: BorderRadius.circular(borderRadius),
+        border: effectiveBorderGradient == null
+            ? Border.all(
+                color: !_isEnabled ? colors.disabled : effectiveBorderColor,
+                width: borderWidth,
+              )
+            : null,
+      ),
+      child: Center(
+        child: _isChecked
+            ? Icon(
+                Icons.check_rounded,
+                size: size * 0.75,
+                color: effectiveCheckColor,
+              )
+            : (_isIndeterminate
+                ? Icon(
+                    Icons.remove_rounded,
+                    size: size * 0.75,
+                    color: effectiveCheckColor,
+                  )
+                : null),
+      ),
+    );
+
+    if (effectiveBorderGradient != null && borderWidth > 0) {
+      box = CustomPaint(
+        foregroundPainter: FlexGradientBorderPainter(
+          gradient: effectiveBorderGradient,
+          borderWidth: borderWidth,
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        child: box,
+      );
+    }
 
     return Semantics(
       checked: _isChecked,
@@ -58,38 +122,7 @@ class FlexCheckbox extends StatelessWidget {
                 }
               }
             : null,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            color: !_isEnabled
-                ? colors.disabled
-                : (isSelected ? effectiveActiveColor : colors.surface),
-            borderRadius: BorderRadius.circular(borderRadius),
-            border: Border.all(
-              color: !_isEnabled
-                  ? colors.disabled
-                  : (isSelected ? effectiveActiveColor : colors.border),
-              width: 1.5,
-            ),
-          ),
-          child: Center(
-            child: _isChecked
-                ? Icon(
-                    Icons.check_rounded,
-                    size: size * 0.75,
-                    color: effectiveCheckColor,
-                  )
-                : (_isIndeterminate
-                    ? Icon(
-                        Icons.remove_rounded,
-                        size: size * 0.75,
-                        color: effectiveCheckColor,
-                      )
-                    : null),
-          ),
-        ),
+        child: box,
       ),
     );
   }

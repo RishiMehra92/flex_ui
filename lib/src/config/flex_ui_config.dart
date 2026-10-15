@@ -8,6 +8,8 @@ class FlexUIConfig {
     this.defaultButtonHeight = 48.0,
     this.defaultInputHeight = 48.0,
     this.defaultBorderRadius = 10.0,
+    this.defaultBorderWidth = 1.0,
+    this.defaultGradient,
     this.enableHapticFeedback = true,
   });
 
@@ -19,6 +21,8 @@ class FlexUIConfig {
   final double defaultButtonHeight;
   final double defaultInputHeight;
   final double defaultBorderRadius;
+  final double defaultBorderWidth;
+  final Gradient? defaultGradient;
   final bool enableHapticFeedback;
 
   FlexUIConfig copyWith({
@@ -27,6 +31,8 @@ class FlexUIConfig {
     double? defaultButtonHeight,
     double? defaultInputHeight,
     double? defaultBorderRadius,
+    double? defaultBorderWidth,
+    Gradient? defaultGradient,
     bool? enableHapticFeedback,
   }) {
     return FlexUIConfig(
@@ -37,6 +43,8 @@ class FlexUIConfig {
       defaultButtonHeight: defaultButtonHeight ?? this.defaultButtonHeight,
       defaultInputHeight: defaultInputHeight ?? this.defaultInputHeight,
       defaultBorderRadius: defaultBorderRadius ?? this.defaultBorderRadius,
+      defaultBorderWidth: defaultBorderWidth ?? this.defaultBorderWidth,
+      defaultGradient: defaultGradient ?? this.defaultGradient,
       enableHapticFeedback: enableHapticFeedback ?? this.enableHapticFeedback,
     );
   }

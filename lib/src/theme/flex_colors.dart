@@ -35,6 +35,9 @@ class FlexColors {
     required this.bottomSheetBackground,
     this.primaryGradient,
     this.secondaryGradient,
+    this.accentGradient,
+    this.backgroundGradient,
+    this.surfaceGradient,
   });
 
   /// Default light color scheme.
@@ -74,6 +77,11 @@ class FlexColors {
       ),
       secondaryGradient: LinearGradient(
         colors: [Color(0xFF4F46E5), Color(0xFF4338CA)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      accentGradient: LinearGradient(
+        colors: [Color(0xFF06B6D4), Color(0xFF0891B2)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
@@ -120,6 +128,11 @@ class FlexColors {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
+      accentGradient: LinearGradient(
+        colors: [Color(0xFF22D3EE), Color(0xFF06B6D4)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
     );
   }
 
@@ -152,6 +165,9 @@ class FlexColors {
   final Color bottomSheetBackground;
   final Gradient? primaryGradient;
   final Gradient? secondaryGradient;
+  final Gradient? accentGradient;
+  final Gradient? backgroundGradient;
+  final Gradient? surfaceGradient;
 
   FlexColors copyWith({
     Color? primary,
@@ -183,6 +199,9 @@ class FlexColors {
     Color? bottomSheetBackground,
     Gradient? primaryGradient,
     Gradient? secondaryGradient,
+    Gradient? accentGradient,
+    Gradient? backgroundGradient,
+    Gradient? surfaceGradient,
   }) {
     return FlexColors(
       primary: primary ?? this.primary,
@@ -215,6 +234,9 @@ class FlexColors {
           bottomSheetBackground ?? this.bottomSheetBackground,
       primaryGradient: primaryGradient ?? this.primaryGradient,
       secondaryGradient: secondaryGradient ?? this.secondaryGradient,
+      accentGradient: accentGradient ?? this.accentGradient,
+      backgroundGradient: backgroundGradient ?? this.backgroundGradient,
+      surfaceGradient: surfaceGradient ?? this.surfaceGradient,
     );
   }
 
@@ -267,6 +289,13 @@ class FlexColors {
       secondaryGradient:
           Gradient.lerp(a.secondaryGradient, b.secondaryGradient, t) ??
               a.secondaryGradient,
+      accentGradient: Gradient.lerp(a.accentGradient, b.accentGradient, t) ??
+          a.accentGradient,
+      backgroundGradient:
+          Gradient.lerp(a.backgroundGradient, b.backgroundGradient, t) ??
+              a.backgroundGradient,
+      surfaceGradient: Gradient.lerp(a.surfaceGradient, b.surfaceGradient, t) ??
+          a.surfaceGradient,
     );
   }
 }

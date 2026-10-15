@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../config/flex_ui_theme.dart';
+import '../../theme/flex_gradient_border.dart';
 
 /// Shape variant for [FlexIconButton].
 enum FlexIconButtonShape {
@@ -24,6 +25,8 @@ class FlexIconButton extends StatelessWidget {
     this.foregroundColor,
     this.borderColor,
     this.borderWidth = 1.0,
+    this.gradient,
+    this.borderGradient,
     this.elevation = 0.0,
     this.isLoading = false,
     this.isDisabled = false,
@@ -66,6 +69,12 @@ class FlexIconButton extends StatelessWidget {
 
   /// Border width.
   final double borderWidth;
+
+  /// Optional background gradient.
+  final Gradient? gradient;
+
+  /// Optional border gradient.
+  final Gradient? borderGradient;
 
   /// Elevation shadow.
   final double elevation;
@@ -133,13 +142,17 @@ class FlexIconButton extends StatelessWidget {
       iconWidget = const SizedBox.shrink();
     }
 
+    final effectiveGradient = _isEnabled ? gradient : null;
+    final effectiveBorderGradient = _isEnabled ? borderGradient : null;
+
     Widget button = Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: effectiveBackground,
+        color: effectiveGradient == null ? effectiveBackground : null,
+        gradient: effectiveGradient,
         borderRadius: effectiveRadius,
-        border: borderColor != null
+        border: (effectiveBorderGradient == null && borderColor != null)
             ? Border.all(color: borderColor!, width: borderWidth)
             : null,
         boxShadow: (elevation > 0 && _isEnabled)
@@ -163,6 +176,20 @@ class FlexIconButton extends StatelessWidget {
         ),
       ),
     );
+
+    if (effectiveBorderGradient != null && borderWidth > 0) {
+      button = CustomPaint(
+        foregroundPainter: FlexGradientBorderPainter(
+          gradient: effectiveBorderGradient,
+          borderWidth: borderWidth,
+          borderRadius: effectiveRadius,
+          shape: shape == FlexIconButtonShape.circle
+              ? BoxShape.circle
+              : BoxShape.rectangle,
+        ),
+        child: button,
+      );
+    }
 
     if (showBadge || badgeText != null) {
       button = Stack(

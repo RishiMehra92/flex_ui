@@ -10,6 +10,7 @@ class FlexLinearProgress extends StatelessWidget {
     this.borderRadius,
     this.color,
     this.backgroundColor,
+    this.gradient,
   });
 
   /// The progress value between 0.0 and 1.0. If null, displays an indeterminate animation.
@@ -18,6 +19,7 @@ class FlexLinearProgress extends StatelessWidget {
   final double? borderRadius;
   final Color? color;
   final Color? backgroundColor;
+  final Gradient? gradient;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,49 @@ class FlexLinearProgress extends StatelessWidget {
     final effectiveColor = color ?? colors.primary;
     final effectiveBackground = backgroundColor ?? colors.surfaceVariant;
     final effectiveRadius = borderRadius ?? height / 2;
+
+    if (gradient != null) {
+      if (value != null) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(effectiveRadius),
+          child: Container(
+            height: height,
+            color: effectiveBackground,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    width: constraints.maxWidth * value!.clamp(0.0, 1.0),
+                    height: height,
+                    decoration: BoxDecoration(
+                      gradient: gradient,
+                      borderRadius: BorderRadius.circular(effectiveRadius),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      } else {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(effectiveRadius),
+          child: SizedBox(
+            height: height,
+            child: ShaderMask(
+              shaderCallback: (bounds) => gradient!.createShader(bounds),
+              blendMode: BlendMode.srcIn,
+              child: LinearProgressIndicator(
+                value: null,
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                backgroundColor: effectiveBackground,
+              ),
+            ),
+          ),
+        );
+      }
+    }
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(effectiveRadius),
