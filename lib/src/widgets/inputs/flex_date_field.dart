@@ -22,6 +22,12 @@ class FlexDateField extends StatefulWidget {
     this.borderRadius,
     this.width,
     this.semanticLabel,
+    this.gradient,
+    this.gradientBorder,
+    this.borderGradient,
+    this.focusedGradientBorder,
+    this.errorGradientBorder,
+    this.borderWidth,
   });
 
   final DateTime? selectedDate;
@@ -41,6 +47,12 @@ class FlexDateField extends StatefulWidget {
   final double? borderRadius;
   final double? width;
   final String? semanticLabel;
+  final Gradient? gradient;
+  final Gradient? gradientBorder;
+  final Gradient? borderGradient;
+  final Gradient? focusedGradientBorder;
+  final Gradient? errorGradientBorder;
+  final double? borderWidth;
 
   @override
   State<FlexDateField> createState() => _FlexDateFieldState();
@@ -119,6 +131,11 @@ class _FlexDateFieldState extends State<FlexDateField> {
       fillColor: widget.fillColor,
       borderColor: widget.borderColor,
       borderRadius: widget.borderRadius,
+      borderWidth: widget.borderWidth,
+      gradient: widget.gradient,
+      gradientBorder: widget.gradientBorder ?? widget.borderGradient,
+      focusedGradientBorder: widget.focusedGradientBorder,
+      errorGradientBorder: widget.errorGradientBorder,
       width: widget.width,
       semanticLabel: widget.semanticLabel,
       validator: (val) {

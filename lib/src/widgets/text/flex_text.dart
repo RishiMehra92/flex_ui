@@ -40,6 +40,7 @@ class FlexText extends StatelessWidget {
     this.decoration,
     this.softWrap,
     this.fontFamily,
+    this.gradient,
   });
 
   final String text;
@@ -57,6 +58,9 @@ class FlexText extends StatelessWidget {
   final TextDecoration? decoration;
   final bool? softWrap;
   final String? fontFamily;
+
+  /// Optional gradient applied to the text glyphs using a [ShaderMask].
+  final Gradient? gradient;
 
   @override
   Widget build(BuildContext context) {
@@ -130,13 +134,25 @@ class FlexText extends StatelessWidget {
       fontFamily: fontFamily ?? base.fontFamily,
     );
 
-    return Text(
+    final textWidget = Text(
       text,
-      style: resolvedStyle,
+      style: gradient != null
+          ? resolvedStyle.copyWith(color: Colors.white)
+          : resolvedStyle,
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
       softWrap: softWrap,
     );
+
+    if (gradient != null) {
+      return ShaderMask(
+        blendMode: BlendMode.srcIn,
+        shaderCallback: (bounds) => gradient!.createShader(bounds),
+        child: textWidget,
+      );
+    }
+
+    return textWidget;
   }
 }

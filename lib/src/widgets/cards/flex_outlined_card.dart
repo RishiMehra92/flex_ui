@@ -13,6 +13,8 @@ class FlexOutlinedCard extends StatelessWidget {
     this.borderWidth,
     this.borderColor,
     this.backgroundColor,
+    this.gradient,
+    this.borderGradient,
     this.width,
     this.height,
   });
@@ -25,6 +27,8 @@ class FlexOutlinedCard extends StatelessWidget {
   final double? borderWidth;
   final Color? borderColor;
   final Color? backgroundColor;
+  final Gradient? gradient;
+  final Gradient? borderGradient;
   final double? width;
   final double? height;
 
@@ -39,6 +43,8 @@ class FlexOutlinedCard extends StatelessWidget {
       borderWidth: borderWidth,
       borderColor: borderColor,
       backgroundColor: backgroundColor,
+      gradient: gradient,
+      borderGradient: borderGradient,
       width: width,
       height: height,
       child: child,

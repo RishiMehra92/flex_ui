@@ -20,6 +20,8 @@ class FlexOutlinedButton extends StatelessWidget {
     this.borderColor,
     this.borderWidth,
     this.borderRadius,
+    this.borderGradient,
+    this.labelGradient,
     this.padding,
     this.width,
     this.height,
@@ -48,6 +50,8 @@ class FlexOutlinedButton extends StatelessWidget {
   final Color? borderColor;
   final double? borderWidth;
   final double? borderRadius;
+  final Gradient? borderGradient;
+  final Gradient? labelGradient;
   final EdgeInsetsGeometry? padding;
   final double? width;
   final double? height;
@@ -79,6 +83,8 @@ class FlexOutlinedButton extends StatelessWidget {
       borderColor: borderColor,
       borderWidth: borderWidth,
       borderRadius: borderRadius,
+      borderGradient: borderGradient,
+      labelGradient: labelGradient,
       padding: padding,
       width: width,
       height: height,

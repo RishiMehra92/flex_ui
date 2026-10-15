@@ -11,6 +11,7 @@ class FlexDivider extends StatelessWidget {
     this.indent = 0.0,
     this.endIndent = 0.0,
     this.spacing = 16.0,
+    this.gradient,
   });
 
   /// Factory creating a divider with a centered label (e.g. "OR").
@@ -22,6 +23,7 @@ class FlexDivider extends StatelessWidget {
     this.indent = 0.0,
     this.endIndent = 0.0,
     this.spacing = 16.0,
+    this.gradient,
   });
 
   final String? label;
@@ -30,6 +32,26 @@ class FlexDivider extends StatelessWidget {
   final double indent;
   final double endIndent;
   final double spacing;
+  final Gradient? gradient;
+
+  Widget _buildLine(
+      {required Color color, double indent = 0.0, double endIndent = 0.0}) {
+    if (gradient != null) {
+      return Padding(
+        padding: EdgeInsetsDirectional.only(start: indent, end: endIndent),
+        child: Container(
+          height: thickness,
+          decoration: BoxDecoration(gradient: gradient),
+        ),
+      );
+    }
+    return Divider(
+      color: color,
+      thickness: thickness,
+      indent: indent,
+      endIndent: endIndent,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +64,8 @@ class FlexDivider extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: Divider(
+              child: _buildLine(
                 color: dividerColor,
-                thickness: thickness,
                 indent: indent,
               ),
             ),
@@ -59,9 +80,8 @@ class FlexDivider extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Divider(
+              child: _buildLine(
                 color: dividerColor,
-                thickness: thickness,
                 endIndent: endIndent,
               ),
             ),
@@ -72,9 +92,8 @@ class FlexDivider extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: spacing / 2),
-      child: Divider(
+      child: _buildLine(
         color: dividerColor,
-        thickness: thickness,
         indent: indent,
         endIndent: endIndent,
       ),

@@ -96,6 +96,137 @@ final isDark = context.isFlexDark;
 
 ---
 
+## 🌈 Universal Gradient & Styling System
+
+`flex_ui` features a comprehensive gradient engine built directly on top of Flutter's native `Gradient` abstraction. Gradients, gradient borders, and gradient typography can be configured globally in `FlexUIThemeData` or applied dynamically on individual components.
+
+### 1. Centralized Gradient Model (`FlexGradient`)
+Because `FlexGradient` extends Flutter's `Gradient`, you can pass it anywhere Flutter expects a gradient (`BoxDecoration`, `ShaderMask`, or standard widgets).
+
+```dart
+// Custom linear gradient
+const gradient = FlexGradient(
+  colors: [Color(0xFF6750A4), Color(0xFF9C27B0)],
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+);
+
+// Radial & sweep gradients
+const radial = FlexGradient.radial(
+  colors: [Colors.purple, Colors.blue],
+  radius: 0.8,
+);
+
+const sweep = FlexGradient.sweep(
+  colors: [Colors.pink, Colors.amber],
+);
+
+// Solid color fallback
+final solidGradient = FlexGradient.solid(Colors.indigo);
+
+// Transformations
+final transparent = gradient.withOpacity(0.8);
+final rotated = gradient.withRotation(math.pi / 4);
+```
+
+### 2. Designer Palettes
+`FlexGradient` ships with 10 high-impact designer presets:
+- `FlexGradient.primary` (Modern Royal Blue)
+- `FlexGradient.secondary` (Electric Indigo to Violet)
+- `FlexGradient.accent` (Cyan to Deep Teal)
+- `FlexGradient.sunset` (Vibrant Coral Orange into Peach)
+- `FlexGradient.ocean` (Cyan into Royal Blue)
+- `FlexGradient.purplePink` (Deep Magenta into Sunset Amber)
+- `FlexGradient.emerald` (Vibrant Emerald into Deep Forest Teal)
+- `FlexGradient.fire` (Crimson Red into Fiery Amber)
+- `FlexGradient.dark` (Midnight Slate into Pitch Obsidian)
+- `FlexGradient.glass` (Frosted Semi-Transparent Glassmorphic)
+
+### 3. Gradient Border Engine (`FlexGradientBorderPainter` & `FlexGradientBorderBox`)
+Render smooth gradient borders on any container or shape with perfect stroke alignment:
+
+```dart
+FlexGradientBorderBox(
+  borderGradient: FlexGradient.sunset,
+  borderWidth: 2.0,
+  borderRadius: BorderRadius.circular(16),
+  backgroundGradient: FlexGradient.glass,
+  child: const Padding(
+    padding: EdgeInsets.all(16),
+    child: Text('Frosted Card with Gradient Border'),
+  ),
+);
+```
+
+### 4. Gradient Buttons & Typography
+```dart
+// Gradient background + border + gradient label
+FlexButton(
+  label: 'Get Started',
+  gradient: FlexGradient.primary,
+  borderGradient: FlexGradient.ocean,
+  onPressed: () {},
+);
+
+// Gradient text rendered via ShaderMask
+const FlexText(
+  'Transforming the future',
+  gradient: FlexGradient.sunset,
+  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+);
+
+const FlexHeading(
+  'Dashboard Overview',
+  gradient: FlexGradient.purplePink,
+);
+```
+
+### 5. Gradient Input Fields
+Style input borders with distinct gradients per state (idle, focused, error, disabled, success):
+
+```dart
+FlexInputField(
+  label: 'Email',
+  hintText: 'user@domain.com',
+  gradient: FlexGradient.glass,
+  gradientBorder: FlexGradient.primary,
+  focusedGradientBorder: FlexGradient.sunset,
+  errorGradientBorder: FlexGradient.fire,
+);
+```
+
+### 6. Gradient Selection Controls, Avatars & Badges
+```dart
+FlexCheckbox(
+  value: isChecked,
+  gradient: FlexGradient.primary,
+  borderGradient: FlexGradient.accent,
+  onChanged: (val) {},
+);
+
+FlexSwitch(
+  value: isSwitched,
+  activeTrackGradient: FlexGradient.primary,
+  thumbGradient: FlexGradient.sunset,
+  onChanged: (val) {},
+);
+
+FlexBadge(
+  label: 'PRO',
+  gradient: FlexGradient.fire,
+  child: const Icon(Icons.person),
+);
+
+FlexAvatar(
+  name: 'Alex Morgan',
+  gradient: FlexGradient.purplePink,
+  borderGradient: FlexGradient.fire,
+  borderWidth: 2.0,
+);
+```
+
+---
+
 ## 🔤 Typography & Font Customization
 
 `flex_ui` does not force any specific font family or network dependency.

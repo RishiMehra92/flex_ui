@@ -13,6 +13,8 @@ class FlexCheckboxListTile extends StatelessWidget {
     this.secondary,
     this.activeColor,
     this.checkColor,
+    this.gradient,
+    this.borderGradient,
     this.tristate = false,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
   });
@@ -24,6 +26,8 @@ class FlexCheckboxListTile extends StatelessWidget {
   final Widget? secondary;
   final Color? activeColor;
   final Color? checkColor;
+  final Gradient? gradient;
+  final Gradient? borderGradient;
   final bool tristate;
   final EdgeInsetsGeometry padding;
 
@@ -57,6 +61,8 @@ class FlexCheckboxListTile extends StatelessWidget {
               onChanged: onChanged,
               activeColor: activeColor,
               checkColor: checkColor,
+              gradient: gradient,
+              borderGradient: borderGradient,
               tristate: tristate,
             ),
             SizedBox(width: theme.spacing.sm),

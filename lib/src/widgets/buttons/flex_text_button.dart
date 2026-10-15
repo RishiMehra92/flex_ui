@@ -17,6 +17,7 @@ class FlexTextButton extends StatelessWidget {
     this.prefixWidget,
     this.suffixWidget,
     this.foregroundColor,
+    this.labelGradient,
     this.padding,
     this.width,
     this.height,
@@ -42,6 +43,7 @@ class FlexTextButton extends StatelessWidget {
   final Widget? prefixWidget;
   final Widget? suffixWidget;
   final Color? foregroundColor;
+  final Gradient? labelGradient;
   final EdgeInsetsGeometry? padding;
   final double? width;
   final double? height;
@@ -70,6 +72,7 @@ class FlexTextButton extends StatelessWidget {
       prefixWidget: prefixWidget,
       suffixWidget: suffixWidget,
       foregroundColor: foregroundColor,
+      labelGradient: labelGradient,
       padding:
           padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       width: width,

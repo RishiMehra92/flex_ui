@@ -18,6 +18,11 @@ class FlexSearchField extends StatefulWidget {
     this.height,
     this.autofocus = false,
     this.semanticLabel = 'Search',
+    this.gradient,
+    this.gradientBorder,
+    this.borderGradient,
+    this.focusedGradientBorder,
+    this.borderWidth,
   });
 
   final TextEditingController? controller;
@@ -33,6 +38,11 @@ class FlexSearchField extends StatefulWidget {
   final double? height;
   final bool autofocus;
   final String semanticLabel;
+  final Gradient? gradient;
+  final Gradient? gradientBorder;
+  final Gradient? borderGradient;
+  final Gradient? focusedGradientBorder;
+  final double? borderWidth;
 
   @override
   State<FlexSearchField> createState() => _FlexSearchFieldState();
@@ -93,6 +103,10 @@ class _FlexSearchFieldState extends State<FlexSearchField> {
       fillColor: widget.fillColor,
       borderColor: widget.borderColor,
       borderRadius: widget.borderRadius,
+      borderWidth: widget.borderWidth,
+      gradient: widget.gradient,
+      gradientBorder: widget.gradientBorder ?? widget.borderGradient,
+      focusedGradientBorder: widget.focusedGradientBorder,
       width: widget.width,
       height: widget.height,
       autofocus: widget.autofocus,

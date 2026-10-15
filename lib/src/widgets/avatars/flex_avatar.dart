@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../config/flex_ui_theme.dart';
 import '../../theme/flex_theme_data.dart';
+import '../../theme/flex_gradient_border.dart';
 
 /// An avatar component supporting image URLs, initials fallback, icons,
 /// and an online/presence status indicator.
@@ -17,6 +18,10 @@ class FlexAvatar extends StatelessWidget {
     this.onlineIndicatorColor,
     this.borderRadius,
     this.onTap,
+    this.gradient,
+    this.borderGradient,
+    this.borderColor,
+    this.borderWidth,
   });
 
   final String? imageUrl;
@@ -29,6 +34,10 @@ class FlexAvatar extends StatelessWidget {
   final Color? onlineIndicatorColor;
   final double? borderRadius;
   final VoidCallback? onTap;
+  final Gradient? gradient;
+  final Gradient? borderGradient;
+  final Color? borderColor;
+  final double? borderWidth;
 
   String _getInitials(String input) {
     final parts = input.trim().split(RegExp(r'\s+'));
@@ -42,9 +51,12 @@ class FlexAvatar extends StatelessWidget {
     final theme = FlexUITheme.of(context);
     final colors = theme.colors;
 
-    final bg = backgroundColor ?? colors.primaryContainer;
-    final fg = foregroundColor ?? colors.primary;
+    final bg =
+        backgroundColor ?? (gradient != null ? null : colors.primaryContainer);
+    final fg =
+        foregroundColor ?? (gradient != null ? Colors.white : colors.primary);
     final radius = borderRadius ?? (size / 2);
+    final isCircle = borderRadius == null;
 
     Widget avatarContent;
     if (imageUrl != null && imageUrl!.isNotEmpty) {
@@ -64,10 +76,29 @@ class FlexAvatar extends StatelessWidget {
       child: Container(
         width: size,
         height: size,
-        color: bg,
+        decoration: BoxDecoration(
+          color: bg,
+          gradient: gradient,
+          borderRadius: BorderRadius.circular(radius),
+          border: borderColor != null && borderGradient == null
+              ? Border.all(color: borderColor!, width: borderWidth ?? 1.0)
+              : null,
+        ),
         child: Center(child: avatarContent),
       ),
     );
+
+    if (borderGradient != null) {
+      avatar = CustomPaint(
+        painter: FlexGradientBorderPainter(
+          gradient: borderGradient!,
+          borderWidth: borderWidth ?? 2.0,
+          borderRadius: isCircle ? null : BorderRadius.circular(radius),
+          shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+        ),
+        child: avatar,
+      );
+    }
 
     if (onTap != null) {
       avatar = GestureDetector(onTap: onTap, child: avatar);

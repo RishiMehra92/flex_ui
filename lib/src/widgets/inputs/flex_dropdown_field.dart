@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../config/flex_ui_theme.dart';
+import '../../theme/flex_gradient_border.dart';
 
 /// An item in a [FlexDropdownField].
 class FlexDropdownItem<T> {
@@ -37,6 +38,9 @@ class FlexDropdownField<T> extends StatelessWidget {
     this.borderColor,
     this.fillColor,
     this.width,
+    this.gradient,
+    this.gradientBorder,
+    this.borderGradient,
   });
 
   final List<FlexDropdownItem<T>> items;
@@ -56,6 +60,9 @@ class FlexDropdownField<T> extends StatelessWidget {
   final Color? borderColor;
   final Color? fillColor;
   final double? width;
+  final Gradient? gradient;
+  final Gradient? gradientBorder;
+  final Gradient? borderGradient;
 
   @override
   Widget build(BuildContext context) {
@@ -71,28 +78,36 @@ class FlexDropdownField<T> extends StatelessWidget {
         borderColor ?? inTheme.borderColor ?? colors.border;
     final effectiveBorderWidth = borderWidth ?? inTheme.borderWidth;
 
+    final effectiveGradientBorder = gradientBorder ?? borderGradient;
+
     final outlineBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(effectiveRadius),
-      borderSide: BorderSide(
-        color: effectiveBorderColor,
-        width: effectiveBorderWidth,
-      ),
+      borderSide: effectiveGradientBorder != null
+          ? BorderSide.none
+          : BorderSide(
+              color: effectiveBorderColor,
+              width: effectiveBorderWidth,
+            ),
     );
 
     final focusedBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(effectiveRadius),
-      borderSide: BorderSide(
-        color: inTheme.focusedBorderColor ?? colors.borderFocused,
-        width: inTheme.focusedBorderWidth,
-      ),
+      borderSide: effectiveGradientBorder != null
+          ? BorderSide.none
+          : BorderSide(
+              color: inTheme.focusedBorderColor ?? colors.borderFocused,
+              width: inTheme.focusedBorderWidth,
+            ),
     );
 
     final errorBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(effectiveRadius),
-      borderSide: BorderSide(
-        color: inTheme.errorBorderColor ?? colors.error,
-        width: effectiveBorderWidth,
-      ),
+      borderSide: effectiveGradientBorder != null
+          ? BorderSide.none
+          : BorderSide(
+              color: inTheme.errorBorderColor ?? colors.error,
+              width: effectiveBorderWidth,
+            ),
     );
 
     Widget? leading = prefixWidget;
@@ -189,7 +204,7 @@ class FlexDropdownField<T> extends StatelessWidget {
         errorText: errorText,
         prefixIcon: leading,
         filled: true,
-        fillColor: effectiveFillColor,
+        fillColor: gradient != null ? Colors.transparent : effectiveFillColor,
         isDense: true,
         contentPadding: inTheme.padding,
         border: outlineBorder,
@@ -198,6 +213,25 @@ class FlexDropdownField<T> extends StatelessWidget {
         errorBorder: errorBorder,
       ),
     );
+
+    if (gradient != null) {
+      dropdown = Container(
+        decoration: BoxDecoration(
+          gradient: gradient,
+          borderRadius: BorderRadius.circular(effectiveRadius),
+        ),
+        child: dropdown,
+      );
+    }
+
+    if (effectiveGradientBorder != null) {
+      dropdown = FlexGradientBorderBox(
+        borderGradient: effectiveGradientBorder,
+        borderWidth: effectiveBorderWidth,
+        borderRadius: BorderRadius.circular(effectiveRadius),
+        child: dropdown,
+      );
+    }
 
     Widget result = Column(
       crossAxisAlignment: CrossAxisAlignment.start,

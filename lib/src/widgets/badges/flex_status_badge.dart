@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../config/flex_ui_theme.dart';
+import '../../theme/flex_gradient_border.dart';
 
 /// Semantic status variant for [FlexStatusBadge].
 enum FlexStatusType {
@@ -22,6 +23,10 @@ class FlexStatusBadge extends StatelessWidget {
     this.customBackgroundColor,
     this.borderRadius = 12.0,
     this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    this.gradient,
+    this.borderGradient,
+    this.borderColor,
+    this.borderWidth,
   });
 
   final String label;
@@ -32,6 +37,10 @@ class FlexStatusBadge extends StatelessWidget {
   final Color? customBackgroundColor;
   final double borderRadius;
   final EdgeInsetsGeometry padding;
+  final Gradient? gradient;
+  final Gradient? borderGradient;
+  final Color? borderColor;
+  final double? borderWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +78,22 @@ class FlexStatusBadge extends StatelessWidget {
       }
     }
 
-    return Container(
+    if (gradient != null) {
+      bg = Colors.transparent;
+      fg = customColor ?? Colors.white;
+    }
+
+    final effectiveWidth = borderWidth ?? 1.0;
+
+    Widget badgeContent = Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: bg,
+        color: gradient == null ? bg : null,
+        gradient: gradient,
         borderRadius: BorderRadius.circular(borderRadius),
+        border: borderColor != null && borderGradient == null
+            ? Border.all(color: borderColor!, width: effectiveWidth)
+            : null,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -102,5 +122,16 @@ class FlexStatusBadge extends StatelessWidget {
         ],
       ),
     );
+
+    if (borderGradient != null) {
+      badgeContent = FlexGradientBorderBox(
+        borderGradient: borderGradient!,
+        borderWidth: effectiveWidth,
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: badgeContent,
+      );
+    }
+
+    return badgeContent;
   }
 }

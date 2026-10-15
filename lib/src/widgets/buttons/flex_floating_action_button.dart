@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../config/flex_ui_theme.dart';
+import '../../theme/flex_gradient_border.dart';
 
 /// An elevated floating action button supporting regular and extended modes,
 /// loading state, gradients, and custom colors.
@@ -14,6 +15,9 @@ class FlexFloatingActionButton extends StatelessWidget {
     this.backgroundColor,
     this.foregroundColor,
     this.gradient,
+    this.borderGradient,
+    this.borderColor,
+    this.borderWidth = 1.0,
     this.elevation = 4.0,
     this.isLoading = false,
     this.borderRadius,
@@ -30,6 +34,9 @@ class FlexFloatingActionButton extends StatelessWidget {
     this.backgroundColor,
     this.foregroundColor,
     this.gradient,
+    this.borderGradient,
+    this.borderColor,
+    this.borderWidth = 1.0,
     this.elevation = 4.0,
     this.isLoading = false,
     this.borderRadius,
@@ -43,6 +50,9 @@ class FlexFloatingActionButton extends StatelessWidget {
   final Color? backgroundColor;
   final Color? foregroundColor;
   final Gradient? gradient;
+  final Gradient? borderGradient;
+  final Color? borderColor;
+  final double borderWidth;
   final double elevation;
   final bool isLoading;
   final double? borderRadius;
@@ -102,6 +112,9 @@ class FlexFloatingActionButton extends StatelessWidget {
           color: gradient == null ? effectiveBackground : null,
           gradient: gradient,
           borderRadius: BorderRadius.circular(effectiveRadius),
+          border: (borderGradient == null && borderColor != null)
+              ? Border.all(color: borderColor!, width: borderWidth)
+              : null,
         ),
         child: InkWell(
           onTap: isLoading ? null : onPressed,
@@ -113,6 +126,17 @@ class FlexFloatingActionButton extends StatelessWidget {
         ),
       ),
     );
+
+    if (borderGradient != null && borderWidth > 0) {
+      fab = CustomPaint(
+        foregroundPainter: FlexGradientBorderPainter(
+          gradient: borderGradient!,
+          borderWidth: borderWidth,
+          borderRadius: BorderRadius.circular(effectiveRadius),
+        ),
+        child: fab,
+      );
+    }
 
     if (tooltip != null) {
       fab = Tooltip(message: tooltip!, child: fab);

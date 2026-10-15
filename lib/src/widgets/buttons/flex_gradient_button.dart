@@ -18,6 +18,11 @@ class FlexGradientButton extends StatelessWidget {
     this.prefixWidget,
     this.suffixWidget,
     this.foregroundColor,
+    this.borderColor,
+    this.borderWidth,
+    this.borderGradient,
+    this.labelGradient,
+    this.shadowColor,
     this.borderRadius,
     this.elevation,
     this.padding,
@@ -46,6 +51,11 @@ class FlexGradientButton extends StatelessWidget {
   final Widget? prefixWidget;
   final Widget? suffixWidget;
   final Color? foregroundColor;
+  final Color? borderColor;
+  final double? borderWidth;
+  final Gradient? borderGradient;
+  final Gradient? labelGradient;
+  final Color? shadowColor;
   final double? borderRadius;
   final double? elevation;
   final EdgeInsetsGeometry? padding;
@@ -77,6 +87,11 @@ class FlexGradientButton extends StatelessWidget {
       prefixWidget: prefixWidget,
       suffixWidget: suffixWidget,
       foregroundColor: foregroundColor,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      borderGradient: borderGradient,
+      labelGradient: labelGradient,
+      shadowColor: shadowColor,
       borderRadius: borderRadius,
       elevation: elevation,
       padding: padding,

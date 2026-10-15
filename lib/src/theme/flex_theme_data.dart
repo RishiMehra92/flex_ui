@@ -34,10 +34,28 @@ class FlexUIThemeData extends ThemeExtension<FlexUIThemeData> {
     FlexDialogThemeData? dialogTheme,
     FlexBottomSheetThemeData? bottomSheetTheme,
     String? fontFamily,
+    Gradient? primaryGradient,
+    Gradient? secondaryGradient,
+    Gradient? accentGradient,
+    double? borderRadius,
+    double? borderWidth,
   }) {
-    final effectiveColors = colors ?? FlexColors.light();
-    final effectiveSpacing = spacing ?? const FlexSpacing();
-    final effectiveRadius = radius ?? const FlexRadius();
+    var effectiveColors = colors ?? FlexColors.light();
+    if (primaryGradient != null ||
+        secondaryGradient != null ||
+        accentGradient != null) {
+      effectiveColors = effectiveColors.copyWith(
+        primaryGradient: primaryGradient,
+        secondaryGradient: secondaryGradient,
+        accentGradient: accentGradient,
+      );
+    }
+
+    var effectiveRadius = radius ?? const FlexRadius();
+    if (borderRadius != null) {
+      effectiveRadius = effectiveRadius.copyWith(md: borderRadius);
+    }
+
     final effectiveTypography = typography ??
         FlexTypography.fromColors(
           primaryText: effectiveColors.textPrimary,
@@ -45,15 +63,45 @@ class FlexUIThemeData extends ThemeExtension<FlexUIThemeData> {
           fontFamily: fontFamily,
         );
 
+    var effectiveButtonTheme = buttonTheme ?? const FlexButtonThemeData();
+    if (borderRadius != null) {
+      effectiveButtonTheme =
+          effectiveButtonTheme.copyWith(borderRadius: borderRadius);
+    }
+    if (borderWidth != null) {
+      effectiveButtonTheme =
+          effectiveButtonTheme.copyWith(borderWidth: borderWidth);
+    }
+
+    var effectiveInputTheme = inputTheme ?? const FlexInputThemeData();
+    if (borderRadius != null) {
+      effectiveInputTheme =
+          effectiveInputTheme.copyWith(borderRadius: borderRadius);
+    }
+    if (borderWidth != null) {
+      effectiveInputTheme =
+          effectiveInputTheme.copyWith(borderWidth: borderWidth);
+    }
+
+    var effectiveCardTheme = cardTheme ?? const FlexCardThemeData();
+    if (borderRadius != null) {
+      effectiveCardTheme =
+          effectiveCardTheme.copyWith(borderRadius: borderRadius);
+    }
+    if (borderWidth != null) {
+      effectiveCardTheme =
+          effectiveCardTheme.copyWith(borderWidth: borderWidth);
+    }
+
     return FlexUIThemeData(
       brightness: Brightness.light,
       colors: effectiveColors,
-      spacing: effectiveSpacing,
+      spacing: spacing ?? const FlexSpacing(),
       radius: effectiveRadius,
       typography: effectiveTypography,
-      buttonTheme: buttonTheme ?? const FlexButtonThemeData(),
-      inputTheme: inputTheme ?? const FlexInputThemeData(),
-      cardTheme: cardTheme ?? const FlexCardThemeData(),
+      buttonTheme: effectiveButtonTheme,
+      inputTheme: effectiveInputTheme,
+      cardTheme: effectiveCardTheme,
       dialogTheme: dialogTheme ?? const FlexDialogThemeData(),
       bottomSheetTheme: bottomSheetTheme ?? const FlexBottomSheetThemeData(),
     );
@@ -71,10 +119,28 @@ class FlexUIThemeData extends ThemeExtension<FlexUIThemeData> {
     FlexDialogThemeData? dialogTheme,
     FlexBottomSheetThemeData? bottomSheetTheme,
     String? fontFamily,
+    Gradient? primaryGradient,
+    Gradient? secondaryGradient,
+    Gradient? accentGradient,
+    double? borderRadius,
+    double? borderWidth,
   }) {
-    final effectiveColors = colors ?? FlexColors.dark();
-    final effectiveSpacing = spacing ?? const FlexSpacing();
-    final effectiveRadius = radius ?? const FlexRadius();
+    var effectiveColors = colors ?? FlexColors.dark();
+    if (primaryGradient != null ||
+        secondaryGradient != null ||
+        accentGradient != null) {
+      effectiveColors = effectiveColors.copyWith(
+        primaryGradient: primaryGradient,
+        secondaryGradient: secondaryGradient,
+        accentGradient: accentGradient,
+      );
+    }
+
+    var effectiveRadius = radius ?? const FlexRadius();
+    if (borderRadius != null) {
+      effectiveRadius = effectiveRadius.copyWith(md: borderRadius);
+    }
+
     final effectiveTypography = typography ??
         FlexTypography.fromColors(
           primaryText: effectiveColors.textPrimary,
@@ -82,15 +148,45 @@ class FlexUIThemeData extends ThemeExtension<FlexUIThemeData> {
           fontFamily: fontFamily,
         );
 
+    var effectiveButtonTheme = buttonTheme ?? const FlexButtonThemeData();
+    if (borderRadius != null) {
+      effectiveButtonTheme =
+          effectiveButtonTheme.copyWith(borderRadius: borderRadius);
+    }
+    if (borderWidth != null) {
+      effectiveButtonTheme =
+          effectiveButtonTheme.copyWith(borderWidth: borderWidth);
+    }
+
+    var effectiveInputTheme = inputTheme ?? const FlexInputThemeData();
+    if (borderRadius != null) {
+      effectiveInputTheme =
+          effectiveInputTheme.copyWith(borderRadius: borderRadius);
+    }
+    if (borderWidth != null) {
+      effectiveInputTheme =
+          effectiveInputTheme.copyWith(borderWidth: borderWidth);
+    }
+
+    var effectiveCardTheme = cardTheme ?? const FlexCardThemeData();
+    if (borderRadius != null) {
+      effectiveCardTheme =
+          effectiveCardTheme.copyWith(borderRadius: borderRadius);
+    }
+    if (borderWidth != null) {
+      effectiveCardTheme =
+          effectiveCardTheme.copyWith(borderWidth: borderWidth);
+    }
+
     return FlexUIThemeData(
       brightness: Brightness.dark,
       colors: effectiveColors,
-      spacing: effectiveSpacing,
+      spacing: spacing ?? const FlexSpacing(),
       radius: effectiveRadius,
       typography: effectiveTypography,
-      buttonTheme: buttonTheme ?? const FlexButtonThemeData(),
-      inputTheme: inputTheme ?? const FlexInputThemeData(),
-      cardTheme: cardTheme ?? const FlexCardThemeData(),
+      buttonTheme: effectiveButtonTheme,
+      inputTheme: effectiveInputTheme,
+      cardTheme: effectiveCardTheme,
       dialogTheme: dialogTheme ?? const FlexDialogThemeData(),
       bottomSheetTheme: bottomSheetTheme ?? const FlexBottomSheetThemeData(),
     );
@@ -108,6 +204,21 @@ class FlexUIThemeData extends ThemeExtension<FlexUIThemeData> {
   final FlexBottomSheetThemeData bottomSheetTheme;
 
   bool get isDark => brightness == Brightness.dark;
+
+  /// Primary gradient defined in the current color scheme.
+  Gradient? get primaryGradient => colors.primaryGradient;
+
+  /// Secondary gradient defined in the current color scheme.
+  Gradient? get secondaryGradient => colors.secondaryGradient;
+
+  /// Accent gradient defined in the current color scheme.
+  Gradient? get accentGradient => colors.accentGradient;
+
+  /// Default border radius value from [radius.md].
+  double get defaultBorderRadius => radius.md;
+
+  /// Default border width value from [inputTheme.borderWidth].
+  double get defaultBorderWidth => inputTheme.borderWidth;
 
   @override
   FlexUIThemeData copyWith({

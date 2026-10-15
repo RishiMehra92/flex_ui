@@ -31,6 +31,12 @@ class FlexNumberField extends StatelessWidget {
     this.borderRadius,
     this.width,
     this.semanticLabel,
+    this.gradient,
+    this.gradientBorder,
+    this.borderGradient,
+    this.focusedGradientBorder,
+    this.errorGradientBorder,
+    this.borderWidth,
   });
 
   final TextEditingController? controller;
@@ -56,6 +62,12 @@ class FlexNumberField extends StatelessWidget {
   final double? borderRadius;
   final double? width;
   final String? semanticLabel;
+  final Gradient? gradient;
+  final Gradient? gradientBorder;
+  final Gradient? borderGradient;
+  final Gradient? focusedGradientBorder;
+  final Gradient? errorGradientBorder;
+  final double? borderWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +99,11 @@ class FlexNumberField extends StatelessWidget {
       fillColor: fillColor,
       borderColor: borderColor,
       borderRadius: borderRadius,
+      borderWidth: borderWidth,
+      gradient: gradient,
+      gradientBorder: gradientBorder ?? borderGradient,
+      focusedGradientBorder: focusedGradientBorder,
+      errorGradientBorder: errorGradientBorder,
       width: width,
       semanticLabel: semanticLabel,
       onChanged: onChanged,

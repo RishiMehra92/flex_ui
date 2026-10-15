@@ -10,6 +10,7 @@ class FlexVerticalDivider extends StatelessWidget {
     this.width = 16.0,
     this.indent = 0.0,
     this.endIndent = 0.0,
+    this.gradient,
   });
 
   final Color? color;
@@ -17,11 +18,27 @@ class FlexVerticalDivider extends StatelessWidget {
   final double width;
   final double indent;
   final double endIndent;
+  final Gradient? gradient;
 
   @override
   Widget build(BuildContext context) {
     final theme = FlexUITheme.of(context);
     final dividerColor = color ?? theme.colors.divider;
+
+    if (gradient != null) {
+      return SizedBox(
+        width: width,
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.only(top: indent, bottom: endIndent),
+            child: Container(
+              width: thickness,
+              decoration: BoxDecoration(gradient: gradient),
+            ),
+          ),
+        ),
+      );
+    }
 
     return VerticalDivider(
       color: dividerColor,

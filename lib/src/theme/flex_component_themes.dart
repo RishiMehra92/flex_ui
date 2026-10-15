@@ -11,6 +11,11 @@ class FlexButtonThemeData {
     this.animationDuration = const Duration(milliseconds: 200),
     this.enableAnimation = true,
     this.textStyle,
+    this.gradient,
+    this.borderGradient,
+    this.labelGradient,
+    this.borderWidth,
+    this.borderColor,
   });
 
   final double height;
@@ -21,6 +26,11 @@ class FlexButtonThemeData {
   final Duration animationDuration;
   final bool enableAnimation;
   final TextStyle? textStyle;
+  final Gradient? gradient;
+  final Gradient? borderGradient;
+  final Gradient? labelGradient;
+  final double? borderWidth;
+  final Color? borderColor;
 
   FlexButtonThemeData copyWith({
     double? height,
@@ -31,6 +41,11 @@ class FlexButtonThemeData {
     Duration? animationDuration,
     bool? enableAnimation,
     TextStyle? textStyle,
+    Gradient? gradient,
+    Gradient? borderGradient,
+    Gradient? labelGradient,
+    double? borderWidth,
+    Color? borderColor,
   }) {
     return FlexButtonThemeData(
       height: height ?? this.height,
@@ -41,6 +56,11 @@ class FlexButtonThemeData {
       animationDuration: animationDuration ?? this.animationDuration,
       enableAnimation: enableAnimation ?? this.enableAnimation,
       textStyle: textStyle ?? this.textStyle,
+      gradient: gradient ?? this.gradient,
+      borderGradient: borderGradient ?? this.borderGradient,
+      labelGradient: labelGradient ?? this.labelGradient,
+      borderWidth: borderWidth ?? this.borderWidth,
+      borderColor: borderColor ?? this.borderColor,
     );
   }
 
@@ -55,6 +75,15 @@ class FlexButtonThemeData {
       animationDuration: t < 0.5 ? a.animationDuration : b.animationDuration,
       enableAnimation: t < 0.5 ? a.enableAnimation : b.enableAnimation,
       textStyle: TextStyle.lerp(a.textStyle, b.textStyle, t) ?? a.textStyle,
+      gradient: Gradient.lerp(a.gradient, b.gradient, t) ?? a.gradient,
+      borderGradient: Gradient.lerp(a.borderGradient, b.borderGradient, t) ??
+          a.borderGradient,
+      labelGradient:
+          Gradient.lerp(a.labelGradient, b.labelGradient, t) ?? a.labelGradient,
+      borderWidth: a.borderWidth != null && b.borderWidth != null
+          ? (a.borderWidth! + (b.borderWidth! - a.borderWidth!) * t)
+          : (t < 0.5 ? a.borderWidth : b.borderWidth),
+      borderColor: Color.lerp(a.borderColor, b.borderColor, t),
     );
   }
 }
@@ -73,6 +102,12 @@ class FlexInputThemeData {
     this.borderColor,
     this.focusedBorderColor,
     this.errorBorderColor,
+    this.gradient,
+    this.borderGradient,
+    this.focusedBorderGradient,
+    this.errorBorderGradient,
+    this.disabledGradientBorder,
+    this.successGradientBorder,
   });
 
   final double borderRadius;
@@ -86,6 +121,12 @@ class FlexInputThemeData {
   final Color? borderColor;
   final Color? focusedBorderColor;
   final Color? errorBorderColor;
+  final Gradient? gradient;
+  final Gradient? borderGradient;
+  final Gradient? focusedBorderGradient;
+  final Gradient? errorBorderGradient;
+  final Gradient? disabledGradientBorder;
+  final Gradient? successGradientBorder;
 
   FlexInputThemeData copyWith({
     double? borderRadius,
@@ -99,6 +140,12 @@ class FlexInputThemeData {
     Color? borderColor,
     Color? focusedBorderColor,
     Color? errorBorderColor,
+    Gradient? gradient,
+    Gradient? borderGradient,
+    Gradient? focusedBorderGradient,
+    Gradient? errorBorderGradient,
+    Gradient? disabledGradientBorder,
+    Gradient? successGradientBorder,
   }) {
     return FlexInputThemeData(
       borderRadius: borderRadius ?? this.borderRadius,
@@ -112,6 +159,15 @@ class FlexInputThemeData {
       borderColor: borderColor ?? this.borderColor,
       focusedBorderColor: focusedBorderColor ?? this.focusedBorderColor,
       errorBorderColor: errorBorderColor ?? this.errorBorderColor,
+      gradient: gradient ?? this.gradient,
+      borderGradient: borderGradient ?? this.borderGradient,
+      focusedBorderGradient:
+          focusedBorderGradient ?? this.focusedBorderGradient,
+      errorBorderGradient: errorBorderGradient ?? this.errorBorderGradient,
+      disabledGradientBorder:
+          disabledGradientBorder ?? this.disabledGradientBorder,
+      successGradientBorder:
+          successGradientBorder ?? this.successGradientBorder,
     );
   }
 
@@ -133,6 +189,21 @@ class FlexInputThemeData {
       focusedBorderColor:
           Color.lerp(a.focusedBorderColor, b.focusedBorderColor, t),
       errorBorderColor: Color.lerp(a.errorBorderColor, b.errorBorderColor, t),
+      gradient: Gradient.lerp(a.gradient, b.gradient, t) ?? a.gradient,
+      borderGradient: Gradient.lerp(a.borderGradient, b.borderGradient, t) ??
+          a.borderGradient,
+      focusedBorderGradient:
+          Gradient.lerp(a.focusedBorderGradient, b.focusedBorderGradient, t) ??
+              a.focusedBorderGradient,
+      errorBorderGradient:
+          Gradient.lerp(a.errorBorderGradient, b.errorBorderGradient, t) ??
+              a.errorBorderGradient,
+      disabledGradientBorder: Gradient.lerp(
+              a.disabledGradientBorder, b.disabledGradientBorder, t) ??
+          a.disabledGradientBorder,
+      successGradientBorder:
+          Gradient.lerp(a.successGradientBorder, b.successGradientBorder, t) ??
+              a.successGradientBorder,
     );
   }
 }
@@ -144,24 +215,40 @@ class FlexCardThemeData {
     this.elevation = 0.0,
     this.padding = const EdgeInsets.all(16.0),
     this.borderWidth = 1.0,
+    this.gradient,
+    this.borderGradient,
+    this.borderColor,
+    this.shadowColor,
   });
 
   final double borderRadius;
   final double elevation;
   final EdgeInsetsGeometry padding;
   final double borderWidth;
+  final Gradient? gradient;
+  final Gradient? borderGradient;
+  final Color? borderColor;
+  final Color? shadowColor;
 
   FlexCardThemeData copyWith({
     double? borderRadius,
     double? elevation,
     EdgeInsetsGeometry? padding,
     double? borderWidth,
+    Gradient? gradient,
+    Gradient? borderGradient,
+    Color? borderColor,
+    Color? shadowColor,
   }) {
     return FlexCardThemeData(
       borderRadius: borderRadius ?? this.borderRadius,
       elevation: elevation ?? this.elevation,
       padding: padding ?? this.padding,
       borderWidth: borderWidth ?? this.borderWidth,
+      gradient: gradient ?? this.gradient,
+      borderGradient: borderGradient ?? this.borderGradient,
+      borderColor: borderColor ?? this.borderColor,
+      shadowColor: shadowColor ?? this.shadowColor,
     );
   }
 
@@ -172,6 +259,11 @@ class FlexCardThemeData {
       elevation: (a.elevation + (b.elevation - a.elevation) * t),
       padding: EdgeInsetsGeometry.lerp(a.padding, b.padding, t) ?? a.padding,
       borderWidth: (a.borderWidth + (b.borderWidth - a.borderWidth) * t),
+      gradient: Gradient.lerp(a.gradient, b.gradient, t) ?? a.gradient,
+      borderGradient: Gradient.lerp(a.borderGradient, b.borderGradient, t) ??
+          a.borderGradient,
+      borderColor: Color.lerp(a.borderColor, b.borderColor, t),
+      shadowColor: Color.lerp(a.shadowColor, b.shadowColor, t),
     );
   }
 }

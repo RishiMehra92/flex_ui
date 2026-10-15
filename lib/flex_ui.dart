@@ -13,6 +13,8 @@ export 'src/theme/flex_radius.dart';
 export 'src/theme/flex_typography.dart';
 export 'src/theme/flex_component_themes.dart';
 export 'src/theme/flex_theme_data.dart';
+export 'src/theme/flex_gradient.dart';
+export 'src/theme/flex_gradient_border.dart';
 export 'src/extensions/build_context_extensions.dart';
 export 'src/extensions/theme_extensions.dart';
 
