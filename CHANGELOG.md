@@ -2,6 +2,15 @@
 
 All notable changes to `flex_ui` will be documented in this file.
 
+## 0.3.0
+
+### Direct Typography API on `FlexText`
+- **Granular Direct Styling**: `FlexText` now exposes all `TextStyle` parameters directly on the widget constructor, eliminating the need to wrap properties inside a `style: TextStyle(...)`.
+  - Added direct properties: `text`, `fontSize`, `color`, `fontWeight`, `fontStyle`, `letterSpacing`, `wordSpacing`, `textBaseline`, `height`, `leadingDistribution`, `locale`, `foreground`, `background`, `shadows`, `fontFeatures`, `fontVariations`, `decoration`, `decorationColor`, `decorationStyle`, `decorationThickness`, `debugLabel`, `fontFamily`, `fontFamilyFallback`, and `package`.
+- **Named `text` Constructor Parameter**: Supports direct usage like `FlexText(text: 'Hello', fontSize: 12, color: AppColors.secondaryText)`.
+- **Positional Constructor Alternative**: Added `FlexText.data('Hello', ...)` for developers who prefer positional text passing.
+- **Backwards Compatible Merge**: Optional `style` parameter is still accepted for merging with pre-existing `TextStyle` objects where granular properties take precedence.
+
 ## 0.2.0
 
 ### Universal Gradient & Styling System

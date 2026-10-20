@@ -526,27 +526,44 @@ class TypographyGalleryPage extends StatelessWidget {
           level: FlexHeadingLevel.h4,
         ),
         SizedBox(height: 20),
-        FlexText('Display Large', variant: FlexTextStyleVariant.displayLarge),
-        FlexText('Display Medium', variant: FlexTextStyleVariant.displayMedium),
-        FlexText('Display Small', variant: FlexTextStyleVariant.displaySmall),
+        FlexText(
+            text: 'Display Large', variant: FlexTextStyleVariant.displayLarge),
+        FlexText(
+            text: 'Display Medium',
+            variant: FlexTextStyleVariant.displayMedium),
+        FlexText(
+            text: 'Display Small', variant: FlexTextStyleVariant.displaySmall),
         FlexDivider(),
-        FlexText('Headline Large', variant: FlexTextStyleVariant.headlineLarge),
-        FlexText('Headline Medium',
-            variant: FlexTextStyleVariant.headlineMedium),
-        FlexText('Headline Small', variant: FlexTextStyleVariant.headlineSmall),
+        FlexText(
+            text: 'Headline Large',
+            variant: FlexTextStyleVariant.headlineLarge),
+        FlexText(
+          text: 'Headline Medium',
+          variant: FlexTextStyleVariant.headlineMedium,
+        ),
+        FlexText(
+            text: 'Headline Small',
+            variant: FlexTextStyleVariant.headlineSmall),
         FlexDivider(),
-        FlexText('Title Large', variant: FlexTextStyleVariant.titleLarge),
-        FlexText('Title Medium', variant: FlexTextStyleVariant.titleMedium),
-        FlexText('Title Small', variant: FlexTextStyleVariant.titleSmall),
+        FlexText(text: 'Title Large', variant: FlexTextStyleVariant.titleLarge),
+        FlexText(
+            text: 'Title Medium', variant: FlexTextStyleVariant.titleMedium),
+        FlexText(text: 'Title Small', variant: FlexTextStyleVariant.titleSmall),
         FlexDivider(),
-        FlexText('Body Large — Clean and crisp text for general reading.',
-            variant: FlexTextStyleVariant.bodyLarge),
+        FlexText(
+          text: 'Body Large — Clean and crisp text for general reading.',
+          variant: FlexTextStyleVariant.bodyLarge,
+        ),
         SizedBox(height: 8),
-        FlexText('Body Medium — Standard paragraph font for dense UI areas.',
-            variant: FlexTextStyleVariant.bodyMedium),
+        FlexText(
+          text: 'Body Medium — Standard paragraph font for dense UI areas.',
+          variant: FlexTextStyleVariant.bodyMedium,
+        ),
         SizedBox(height: 8),
-        FlexText('Body Small — Captions, hints, footnotes, and descriptions.',
-            variant: FlexTextStyleVariant.bodySmall),
+        FlexText(
+          text: 'Body Small — Captions, hints, footnotes, and descriptions.',
+          variant: FlexTextStyleVariant.bodySmall,
+        ),
         FlexDivider.withLabel(label: 'RICH TEXT'),
         FlexRichText(
           spans: [
@@ -590,9 +607,11 @@ class CardsGalleryPage extends StatelessWidget {
           child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FlexText('Flat Card', variant: FlexTextStyleVariant.titleMedium),
+              FlexText(
+                  text: 'Flat Card', variant: FlexTextStyleVariant.titleMedium),
               SizedBox(height: 6),
-              FlexText('Clean background with interactive ink touch response.',
+              FlexText(
+                  text: 'Clean background with interactive ink touch response.',
                   variant: FlexTextStyleVariant.bodySmall),
             ],
           ),
@@ -604,10 +623,12 @@ class CardsGalleryPage extends StatelessWidget {
           child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FlexText('Elevated Card',
+              FlexText(
+                  text: 'Elevated Card',
                   variant: FlexTextStyleVariant.titleMedium),
               SizedBox(height: 6),
-              FlexText('Subtle ambient shadow elevation.',
+              FlexText(
+                  text: 'Subtle ambient shadow elevation.',
                   variant: FlexTextStyleVariant.bodySmall),
             ],
           ),
@@ -617,11 +638,13 @@ class CardsGalleryPage extends StatelessWidget {
           child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FlexText('Outlined Card',
+              FlexText(
+                  text: 'Outlined Card',
                   variant: FlexTextStyleVariant.titleMedium),
               SizedBox(height: 6),
               FlexText(
-                  'Crisp theme border with transparent/surface background.',
+                  text:
+                      'Crisp theme border with transparent/surface background.',
                   variant: FlexTextStyleVariant.bodySmall),
             ],
           ),
@@ -642,10 +665,10 @@ class CardsGalleryPage extends StatelessWidget {
               child: FlexGlassContainer(
                 child: Center(
                   child: FlexText(
-                    'Frosted Glass Container\n(Backdrop Blur + Tint)',
+                    text: 'Frosted Glass Container\n(Backdrop Blur + Tint)',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

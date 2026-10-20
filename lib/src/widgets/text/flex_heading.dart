@@ -62,7 +62,7 @@ class FlexHeading extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         FlexText(
-          title,
+          text: title,
           variant: titleVariant,
           color: titleColor ?? colors.textPrimary,
           gradient: gradient,
@@ -71,7 +71,7 @@ class FlexHeading extends StatelessWidget {
         if (subtitle != null) ...[
           SizedBox(height: spacing),
           FlexText(
-            subtitle!,
+            text: subtitle!,
             variant: FlexTextStyleVariant.bodyMedium,
             color: subtitleColor ?? colors.textSecondary,
             textAlign: textAlign,

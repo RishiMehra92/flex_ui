@@ -236,7 +236,7 @@ void main() {
         const MaterialApp(
           home: Scaffold(
             body: FlexText(
-              'Gradient Text',
+              text: 'Gradient Text',
               gradient: FlexGradient.sunset,
             ),
           ),

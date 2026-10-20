@@ -168,11 +168,12 @@ FlexButton(
   onPressed: () {},
 );
 
-// Gradient text rendered via ShaderMask
+// Gradient text rendered via ShaderMask with direct typography properties
 const FlexText(
-  'Transforming the future',
+  text: 'Transforming the future',
   gradient: FlexGradient.sunset,
-  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+  fontSize: 24,
+  fontWeight: FontWeight.bold,
 );
 
 const FlexHeading(
